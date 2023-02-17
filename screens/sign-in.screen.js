@@ -1,46 +1,82 @@
-import { useState } from 'react';
-import { StyleSheet, Image, View, Text, TextInput, Button, SafeAreaView} from 'react-native';
+import {useContext, useState} from 'react';
+import { StyleSheet, Image, View, Text} from 'react-native';
+import { Box, FormControl, Input, WarningOutlineIcon, Button } from "native-base";
+import { AuthContext } from "../context/AuthContext";
 
 export default function SignInScreen() {
   const [username, setUserName] = useState('');
   const [password, setPassword] = useState('');
+  const [invalidUserName, setInvalidUserName] = useState(false);
+  const [invalidPassword, setInvalidPassword] = useState(false);
+  const { login } = useContext(AuthContext);
+
+  const onSubmit = () => {
+    if (username === '' && password === '') {
+      setInvalidUserName(true);
+      setInvalidPassword(true);
+    }
+    else if (username === '') {
+      setInvalidPassword(false);
+      setInvalidUserName(true);
+    } else if (password === '') {
+      setInvalidUserName(false);
+      setInvalidPassword(true);
+    } else {
+      setInvalidUserName(false);
+      setInvalidPassword(false);
+      login();
+      console.log('here');
+    }
+  }
 
   return (
-    <View style={styles.mainContainer}>
-      <View style={styles.topContainer}>
-        <Image source={require('../assets/logo-square.png')} style={styles.topImage} />
-      </View>
-      <View style={styles.middleContainer}>
-        <Text style={styles.title}>GARAGE APPLICATION</Text>
-        <Image source={require('../assets/garage-blue.png')} style={styles.middleImage} />
-        
-        <TextInput
-            style={styles.textInput}
-            placeholder="Username"
-            onChangeText={newText => setText(newText)}
-            defaultValue={username}
-        />
-        
-        <TextInput
-            style={styles.textInput}
-            placeholder="Password"
-            onChangeText={newText => setText(newText)}
-            defaultValue={password}
-        />
+      <View style={styles.mainContainer}>
+        <View style={styles.topContainer}>
+          <Image source={require('../assets/logo-square.png')} style={styles.topImage} />
+        </View>
+        <View style={styles.middleContainer}>
+          <Text style={styles.title}>GARAGE APPLICATION</Text>
+          <Image source={require('../assets/garage-blue.png')} style={styles.middleImage} />
 
-        <Button
-            onPress={()=>alert("")}
-            title="Login"
-            color="#3774CE"
-        
-            style={styles.button}
-        />
+          <Box width='100%'>
+            <FormControl isInvalid={invalidUserName}>
+              {/*<FormControl.Label>Project Title</FormControl.Label>*/}
+              <Input
+                  placeholder="Username"
+                  onChangeText={e => setUserName(e)}
+                  borderColor={'#3774CE'}
+                  size={'xl'}
+              />
+              <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
+                Invalid Username
+              </FormControl.ErrorMessage>
+            </FormControl>
 
-      </View>
-      <View style={styles.bottomContainer}>
+            <FormControl isInvalid={invalidPassword}>
+              {/*<FormControl.Label>Project Title</FormControl.Label>*/}
+              <Input
+                  placeholder="password"
+                  onChangeText={e => setPassword(e)}
+                  type={'password'}
+                  borderColor={'#3774CE'}
+                  size={'xl'}
+                  mt={4}
+              />
+              <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
+                Invalid Password
+              </FormControl.ErrorMessage>
+            </FormControl>
+          </Box>
+
+          <Button small primary mt={4} bgColor={'#3774CE'} onPress={()=>onSubmit()}>
+            <Text style={styles.buttonText}>Login</Text>
+          </Button>
+
+        </View>
+        <View style={styles.bottomContainer}>
         
+        </View>
       </View>
-    </View>
   );
 }
 
@@ -67,7 +103,7 @@ const styles = StyleSheet.create({
     paddingTop:'20%'
   },
   title:{
-    fontSize:20,
+    fontSize:25,
     textAlign:'center',
     color:'#154897'
   },
@@ -90,7 +126,8 @@ const styles = StyleSheet.create({
     margin:10,
     padding:5
   },
-  button:{
-    
+  buttonText:{
+    color:'white',
+    fontSize:'24'
   }
 });
