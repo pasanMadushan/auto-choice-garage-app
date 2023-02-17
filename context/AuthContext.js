@@ -8,6 +8,7 @@ export const AuthProvider = ({children}) => {
 
     const login = () => {
         setIsLoading(true);
+        setUserToken('dsfsds');
         AsyncStorage.setItem('userToken', 'dsfsds');
         setIsLoading(false);
     }
@@ -32,8 +33,8 @@ export const AuthProvider = ({children}) => {
 
     useEffect(() => {
         isLoggedIn();
-    }, []);
-    console.log('here', userToken)
+    }, [userToken]);
+
     return (
         <AuthContext.Provider value={{login, logout, isLoading, userToken}} >
             {children}

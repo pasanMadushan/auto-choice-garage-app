@@ -20,7 +20,7 @@ export const AppStack = () => {
             </View>
         )
     }
-    console.log('blavla', userToken);
+
     return (
         <>
             {userToken === null ?
