@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { StyleSheet, Image, View, Text, TextInput, Button } from 'react-native';
+import { StyleSheet, Image, View, Text, TextInput, Button, SafeAreaView} from 'react-native';
 
 export default function SignInScreen() {
   const [username, setUserName] = useState('');
@@ -50,7 +50,10 @@ const styles = StyleSheet.create({
   },
   topContainer:{
     backgroundColor: '#154897',
-    height:'30%'
+    height:'30%',
+    paddingTop:'10%',
+    display:'flex',
+    justifyContent:'space-around'
   },
   topImage:{
     height:120,
