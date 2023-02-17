@@ -63,7 +63,8 @@ const styles = StyleSheet.create({
   middleContainer:{
     paddingVertical:20,
     paddingHorizontal:50,
-    height:'60%'
+    height:'60%',
+    paddingTop:'20%'
   },
   title:{
     fontSize:20,
