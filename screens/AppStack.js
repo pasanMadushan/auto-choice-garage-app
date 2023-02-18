@@ -12,7 +12,7 @@ const Stack = createStackNavigator();
 export const AppStack = () => {
 
     const { isLoading, userToken } = useContext(AuthContext);
-    //dssdsd
+    //dssd
     if (isLoading) {
         return (
             <View style={{flex:1, justifyContent: 'space-around', flexDirection: 'row', padding:10}}>
