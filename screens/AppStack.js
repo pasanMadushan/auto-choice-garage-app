@@ -30,7 +30,7 @@ export const AppStack = () => {
                     </Stack.Navigator>
                 ) :
                 (
-                    <Stack.Navigator initialRouteName="Home" screenOptions={{headerShown:false}} >
+                    <Stack.Navigator initialRouteName="Claim" screenOptions={{headerShown:false}} >
                         <Stack.Screen name="Home" component={HomeScreen}/>
                         <Stack.Screen name="Scanner" component={ScannerScreen} />
                         <Stack.Screen name="Claim" component={ClaimScreen}/>
