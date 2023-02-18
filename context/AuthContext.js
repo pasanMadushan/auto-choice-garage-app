@@ -1,6 +1,7 @@
 import React, {createContext, useEffect, useState} from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Axios from 'axios';
+import { request } from "../axios/Axios-utils";
 
 export const AuthContext = createContext();
 export const AuthProvider = ({children}) => {
@@ -10,8 +11,13 @@ export const AuthProvider = ({children}) => {
     // pasan -  172.20.10.2
     // kaveesh - 10.10.6.199
 
+    const testFetch = () => {
+        return request({url: '/auth/test', method: 'post'});
+    }
+
     const login = async (username, password) => {
         setIsLoading(true);
+        await testFetch();
         Axios.post('http://10.10.6.199:3000/api/auth/login',
             { userName:username, password:password }).
         then(async(response) => {
