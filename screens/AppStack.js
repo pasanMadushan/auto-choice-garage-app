@@ -23,7 +23,7 @@ export const AppStack = () => {
 
     return (
         <>
-            {userToken === null ?
+            {userToken !== null ?
                 (
                     <Stack.Navigator initialRouteName="SignIn" screenOptions={{headerShown:false}} >
                         <Stack.Screen name="SignIn" component={SignInScreen}/>
@@ -31,9 +31,9 @@ export const AppStack = () => {
                 ) :
                 (
                     <Stack.Navigator initialRouteName="Claim" screenOptions={{headerShown:false}} >
+                        <Stack.Screen name="Claim" component={ClaimScreen}/>
                         <Stack.Screen name="Home" component={HomeScreen}/>
                         <Stack.Screen name="Scanner" component={ScannerScreen} />
-                        <Stack.Screen name="Claim" component={ClaimScreen}/>
                     </Stack.Navigator>
                 )}
         </>
