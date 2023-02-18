@@ -5,26 +5,24 @@ import Axios from 'axios';
 export const AuthContext = createContext();
 export const AuthProvider = ({children}) => {
     const [isLoading, setIsLoading] = useState(true);
-    const [userToken, setUserToken] = useState(null);
+    const [userToken, setUserToken] = useState('');
 
-    const setToken = (username, password) => {
-        console.log('blabla here', username, password);
-        Axios.post('http://10.10.6.199:3000/api/auth/login',
+    // pasan -  172.20.10.2
+    // kaveesh - 10.10.6.199
+
+    const login = async (username, password) => {
+        setIsLoading(true);
+        Axios.post('http://172.20.10.2:3000/api/auth/login',
             { userName:username, password:password }).
-        then((response) => {
-            console.log(response.data);
+        then(async(response) => {
+            setUserToken(response.data.data.jwt);
+            await AsyncStorage.setItem('userToken', response.data.data.jwt);
+            setIsLoading(false);  
         }).catch((err) => {
             console.log(err);
         })
     }
-    const login = (username, password) => {
-        console.log('here', username, password);
-        setIsLoading(true);
-        setUserToken('dsfsds');
-        AsyncStorage.setItem('userToken', 'dsfsds');
-        setIsLoading(false);
-        setToken(username, password);
-    }
+    
 
     const logout = () => {
         setIsLoading(true);
