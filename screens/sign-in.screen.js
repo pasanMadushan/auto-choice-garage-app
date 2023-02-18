@@ -24,8 +24,7 @@ export default function SignInScreen() {
     } else {
       setInvalidUserName(false);
       setInvalidPassword(false);
-      login();
-      console.log('here');
+      login(username, password);
     }
   }
 
