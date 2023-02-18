@@ -11,13 +11,8 @@ export const AuthProvider = ({children}) => {
     // pasan -  172.20.10.2
     // kaveesh - 10.10.6.199
 
-    const testFetch = () => {
-        return request({url: '/auth/test', method: 'post'});
-    }
-
     const login = async (username, password) => {
         setIsLoading(true);
-        await testFetch();
         Axios.post('http://10.10.6.199:3000/api/auth/login',
             { userName:username, password:password }).
         then(async(response) => {

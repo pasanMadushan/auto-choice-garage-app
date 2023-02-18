@@ -1,6 +1,8 @@
 import axios from 'axios';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+// pasan -  172.20.10.2
+// kaveesh - 10.10.6.199
 const client = axios.create({ baseURL: 'http://10.10.6.199:3000/api' });
 
 export const request = async ({...options}) => {
