@@ -15,10 +15,9 @@ export const AuthProvider = ({children}) => {
         Axios.post('http://10.10.6.199:3000/api/auth/login',
             { userName:username, password:password }).
         then(async(response) => {
-            console.log(response.data);
-            if (response.data.data) {
-                setUserToken(response.data?.data.jwt);
-                await AsyncStorage.setItem('userToken', response.data?.data.jwt);
+            if (response.data.data){
+                setUserToken(response.data.data.jwt);
+                await AsyncStorage.setItem('userToken', response.data.data.jwt);
             }
         }).catch((err) => {
             console.log(err);
