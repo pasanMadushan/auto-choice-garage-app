@@ -9,7 +9,7 @@ export const AuthProvider = ({children}) => {
 
     const setToken = (username, password) => {
         console.log('blabla here', username, password);
-        Axios.post('http://localhost:3000/api/auth/login',
+        Axios.post('http://10.10.6.199:3000/api/auth/login',
             { userName:username, password:password }).
         then((response) => {
             console.log(response.data);
@@ -46,9 +46,10 @@ export const AuthProvider = ({children}) => {
 
     useEffect( () => {
         isLoggedIn();
-        // logout();
+        logout();
         // let userToken = AsyncStorage.getItem('userToken');
         // console.log(userToken);
+        // console.log('fdfdf')
     }, []);
 
     return (
