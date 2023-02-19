@@ -1,15 +1,16 @@
-import {useContext, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import { StyleSheet, Image, View, Text} from 'react-native';
 import { Box, FormControl, Input, WarningOutlineIcon, Button } from "native-base";
 import { AuthContext } from "../context/AuthContext";
+import { useToast } from 'native-base';
 
 export default function SignInScreen() {
   const [username, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const [invalidUserName, setInvalidUserName] = useState(false);
   const [invalidPassword, setInvalidPassword] = useState(false);
-  const { login } = useContext(AuthContext);
-
+  const { login, successMessage } = useContext(AuthContext);
+  const toast = useToast();
   const onSubmit = () => {
     if (username === '' && password === '') {
       setInvalidUserName(true);
@@ -27,6 +28,11 @@ export default function SignInScreen() {
       login(username, password);
     }
   }
+  useEffect(() => {
+    toast.show({
+      description: `${successMessage}`
+    })
+  },[successMessage])
 
   return (
       <View style={styles.mainContainer}>

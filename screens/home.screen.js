@@ -12,7 +12,7 @@ export default function HomeScreen() {
     const navigation = useNavigation();
 
     const testingApi = () => {
-        return request({url: '/test', method: 'post'});
+        return request({url: '/auth/test', method: 'post'});
     }
 
     return (
@@ -35,10 +35,9 @@ export default function HomeScreen() {
                         />
                     </View>
                 </TouchableOpacity>
-
+                <Button title='Testing Api' onPress={() => testingApi()}>
+                </Button>
             </View>
-            <Button title='Testing Api' onPress={() => testingApi()}>
-            </Button>
 
         </View>
     );

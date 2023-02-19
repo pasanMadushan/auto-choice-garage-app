@@ -1,12 +1,12 @@
 import React, {createContext, useEffect, useState} from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Axios from 'axios';
-import { request } from "../axios/Axios-utils";
 
 export const AuthContext = createContext();
 export const AuthProvider = ({children}) => {
     const [isLoading, setIsLoading] = useState(true);
     const [userToken, setUserToken] = useState(null);
+    const [successMessage, setSuccessMessage] = useState('');
 
     // pasan -  172.20.10.2
     // kaveesh - 10.10.6.199
@@ -20,6 +20,7 @@ export const AuthProvider = ({children}) => {
                 setUserToken(response.data.data.jwt);
                 await AsyncStorage.setItem('userToken', response.data.data.jwt);
             }
+            setSuccessMessage(response.data?.message);
         }).catch((err) => {
             console.log(err);
         })
@@ -48,13 +49,13 @@ export const AuthProvider = ({children}) => {
     useEffect( () => {
         isLoggedIn();
         logout();
-        // let userToken = AsyncStorage.getItem('userToken');
-        // console.log(userToken);
-        // console.log('fdfdf')
+        let userToken = AsyncStorage.getItem('userToken');
+        console.log(userToken);
+        console.log('fdfdf')
     }, []);
 
     return (
-        <AuthContext.Provider value={{login, logout, isLoading, userToken}} >
+        <AuthContext.Provider value={{login, logout, isLoading, userToken, successMessage}} >
             {children}
         </AuthContext.Provider>
     )
