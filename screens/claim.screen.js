@@ -1,4 +1,4 @@
-import React,{ useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { StyleSheet, View} from 'react-native';
 
 import { useNavigation } from '@react-navigation/native';
@@ -7,13 +7,16 @@ import { Entypo } from "@expo/vector-icons";
 import flex from "native-base/src/components/primitives/Flex";
 import TextHeader from "../components/TextHeader";
 import * as ImagePicker from 'expo-image-picker';
+import { request } from "../axios/Axios-utils";
 
 
-export default function ClaimScreen() {
+export default function ClaimScreen({route}) {
 
     const [estimateImg, setEstimateImg] = useState(null);
+    const [claimId, setClaimId] = useState(route.params.claimId);
+    const [claimData, setClaimData] = useState(null);
+    const [estimatedValue, setEstimatedValue] = useState('');
     const navigation = useNavigation();
-    const claimId = '234234nwern3';
     const damageImageList = [
         'https://wallpaperaccess.com/full/317501.jpg',
         'https://wallpaperaccess.com/full/317501.jpg',
@@ -22,6 +25,20 @@ export default function ClaimScreen() {
         'https://wallpaperaccess.com/full/317501.jpg'
     ];
 
+    const getClaimDetails = async () => {
+        return await request({url: '/customer/get-claim-details', method: 'post', data: {claimId}});
+    }
+
+    const updateClaimEstimation = async () => {
+        return await request({url: '/garage/update-claim-estimation', method: 'post', data: {claimId}});
+    }
+
+    useEffect(() => {
+        getClaimDetails().then((response) => {
+            setClaimData(response.data.data[0]);
+        })
+    }, [claimId]);
+    console.log(claimData);
     const pickImage = async () => {
         // No permissions request is necessary for launching the image library
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -37,6 +54,12 @@ export default function ClaimScreen() {
         }
     };
 
+    const onConfirmEstimation = () => {
+        if (estimatedValue !== '') {
+            getClaimDetails()
+        }
+    }
+
     return (
         <View style={styles.mainContainer}>
             <View style={styles.topContainer}>
@@ -48,18 +71,18 @@ export default function ClaimScreen() {
                         borderRadius="full"
                         onPress={()=>navigation.navigate('Home')}
                     />
-                    <Text style={styles.claimIdText} fontSize={'3xl'}>{`#${claimId}`}</Text>
+                    <Text style={styles.claimIdText} fontSize={'3xl'} numberOfLines={1}>{`#${claimId}`}</Text>
                 </View>
                 <View style={styles.nameBar}>
                     <Text fontSize={'xl'} color={'#154897'}>Customer</Text>
-                    <Text fontSize={'3xl'} color={'#154897'}>Kaveesh Charuka</Text>
+                    <Text fontSize={'3xl'} color={'#154897'}>{claimData?.first_name + ' ' + claimData?.last_name}</Text>
                 </View>
                 <View style={styles.locationAndTimeView}>
                     <View style={styles.dataTimeView}>
                         <Image alt='date-time-image' source={require('../assets/date-time.png')} style={styles.dataTimeImage} />
                         <View style={{display: 'flex', alignSelf: 'center'}}>
-                            <Text color='white'>2022/12/12</Text>
-                            <Text color='white'>12.23AM</Text>
+                            <Text color='white'>{claimData?.datetime.split(' ')[0]}</Text>
+                            <Text color='white'>{claimData?.datetime.split(' ')[1]}</Text>
                         </View>
                     </View>
                     <View style={styles.dataTimeView}>
@@ -90,7 +113,7 @@ export default function ClaimScreen() {
                                 color='#154897'
                                 style={{marginTop: 5}}
                             >
-                                Toyoto Vitz
+                                {claimData?.model}
                             </Text>
                         </View>
                         <View>
@@ -100,7 +123,7 @@ export default function ClaimScreen() {
                                 color='#154897'
                                 style={{marginTop: 5}}
                             >
-                                CEB-1233
+                                {claimData?.number}
                             </Text>
                         </View>
                     </View>
@@ -130,7 +153,7 @@ export default function ClaimScreen() {
                     <View style={{marginTop: 10}}>
                         <TextHeader text='DESCRIPTION' />
                         <Text>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            {claimData?.description}
                         </Text>
                     </View>
                 </View>
@@ -144,11 +167,11 @@ export default function ClaimScreen() {
                 >
                     <View>
                         <Text fontSize={'3xl'} color='white' >ESTIMATE NOW</Text>
-                        <FormControl isInvalid={false} style={{marginTop: 10, marginBottom: 20}}>
+                        <FormControl isInvalid={estimatedValue === null} style={{marginTop: 10, marginBottom: 20}}>
                             <Input
                                 placeholder="Final Estimated Value"
-                                onChangeText={() => {
-                                    console.log('hi')}}
+                                onChangeText={(e) => {
+                                    setEstimatedValue(e)}}
                                 borderColor={'white'}
                                 bgColor={'white'}
                                 size={'2xl'}
@@ -203,7 +226,8 @@ const styles = StyleSheet.create({
     claimIdText: {
         display: 'flex',
         alignSelf: 'center',
-        color: 'white'
+        color: 'white',
+        width: 250,
     },
     nameBar: {
         backgroundColor: 'white',

@@ -11,5 +11,5 @@ export const request = async ({...options}) => {
     const onError = (error) => {
         return error;
     }
-    return client(options).then(onSuccess).catch(onError);
+    return await client(options).then(onSuccess).catch(onError);
 }

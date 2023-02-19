@@ -48,10 +48,10 @@ export const AuthProvider = ({children}) => {
 
     useEffect( () => {
         isLoggedIn();
-        logout();
-        let userToken = AsyncStorage.getItem('userToken');
-        console.log(userToken);
-        console.log('fdfdf')
+        // logout();
+        // let userToken = AsyncStorage.getItem('userToken');
+        // console.log(userToken);
+        // console.log('fdfdf')
     }, []);
 
     return (

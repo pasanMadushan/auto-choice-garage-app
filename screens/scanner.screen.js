@@ -10,50 +10,51 @@ export default function Scanner(){
     const navigation = useNavigation();
 
     useEffect(() => {
-    const getBarCodeScannerPermissions = async () => {
-      const { status } = await BarCodeScanner.requestPermissionsAsync();
-      setHasPermission(status === 'granted');
+        const getBarCodeScannerPermissions = async () => {
+            const { status } = await BarCodeScanner.requestPermissionsAsync();
+            setHasPermission(status === 'granted');
+        };
+
+        getBarCodeScannerPermissions();
+    }, []);
+
+
+    const handleBarCodeScanned = ({ type, data }) => {
+        setScanned(true);
+        // alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+        console.log('blabla', type, data);
+        navigation.navigate('Claim', { claimId:data });
     };
 
-    getBarCodeScannerPermissions();
-  }, []);
-
-
-  const handleBarCodeScanned = ({ type, data }) => {
-    setScanned(true);
-    // alert(`Bar code with type ${type} and data ${data} has been scanned!`);
-    navigation.navigate('Claim');
-  };
-
     
-  if (hasPermission === null) {
-    return <Text>Requesting for camera permission</Text>;
-  }
-  if (hasPermission === false) {
-    return <Text>No access to camera</Text>;
-  }
+    if (hasPermission === null) {
+        return <Text>Requesting for camera permission</Text>;
+    }
+    if (hasPermission === false) {
+        return <Text>No access to camera</Text>;
+    }
 
     return (
-    <View style={styles.container}>
-      <BarCodeScanner
-        onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-        style={StyleSheet.absoluteFillObject}
-      />
-      {scanned && <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
+        <View style={styles.container}>
+            <BarCodeScanner
+                onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+                style={StyleSheet.absoluteFillObject}
+            />
+            {scanned && <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
 
-      <Button title="back" onPress={()=>navigation.navigate('Home')}  />
+            <Button title="back" onPress={()=>navigation.navigate('Home')}  />
 
 
-    </View>
-  );
+        </View>
+    );
 }
 
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    height:'100%'
-  },
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        height:'100%'
+    },
 
 });
