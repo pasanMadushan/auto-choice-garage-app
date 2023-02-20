@@ -29,9 +29,11 @@ export default function SignInScreen() {
     }
   }
   useEffect(() => {
-    toast.show({
-      description: `${successMessage}`
-    })
+    if (successMessage) {
+      toast.show({
+        description: `${successMessage}`
+      })
+    }
   },[successMessage])
 
   return (
