@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import { StyleSheet, View} from 'react-native';
-
+import { useToast } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
 import {Icon, IconButton, ScrollView, Text, Image, Input, FormControl, WarningOutlineIcon, Button} from "native-base";
 import { Entypo } from "@expo/vector-icons";
@@ -13,10 +13,12 @@ import { request } from "../axios/Axios-utils";
 export default function ClaimScreen({route}) {
 
     const [estimateImg, setEstimateImg] = useState(null);
+    const [imageBlob, setImageBlob] = useState(null);
     const [claimId, setClaimId] = useState(route.params.claimId);
     const [claimData, setClaimData] = useState(null);
     const [estimatedValue, setEstimatedValue] = useState('');
     const navigation = useNavigation();
+    const toast = useToast();
     const damageImageList = [
         'https://wallpaperaccess.com/full/317501.jpg',
         'https://wallpaperaccess.com/full/317501.jpg',
@@ -30,7 +32,8 @@ export default function ClaimScreen({route}) {
     }
 
     const updateClaimEstimation = async () => {
-        return await request({url: '/garage/update-claim-estimation', method: 'post', data: {claimId}});
+        return await request({url: '/garage/update-claim-estimation', method: 'post', data: {claimId, estimateValue: estimatedValue, estimateImage: estimateImg?.base64}});
+        // estimateImg?.base64
     }
 
     useEffect(() => {
@@ -38,7 +41,6 @@ export default function ClaimScreen({route}) {
             setClaimData(response.data.data[0]);
         })
     }, [claimId]);
-    console.log(claimData);
     const pickImage = async () => {
         // No permissions request is necessary for launching the image library
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -46,19 +48,44 @@ export default function ClaimScreen({route}) {
             allowsEditing: true,
             aspect: [4, 3],
             quality: 1,
+            base64: true,
         });
 
         if (!result.canceled) {
             setEstimateImg(result.assets[0]);
-            console.log(result.assets[0]);
+            // console.log(Object.keys(result.assets[0]));
+            // console.log(result.assets[0].base64);
+            // convertImageToBlob(result.assets[0]?.uri);
         }
     };
-
     const onConfirmEstimation = () => {
-        if (estimatedValue !== '') {
-            getClaimDetails()
+        if (estimatedValue === '' || !estimatedValue) {
+            setEstimatedValue(null);
+        } else if (!estimateImg) {
+            toast.show({
+                description: 'Upload Receipt Image!'
+            })
+        }
+
+        if (estimatedValue !== '' && estimatedValue !== null && estimateImg) {
+            updateClaimEstimation();
+            setClaimData(null);
+            setEstimatedValue('');
+            setEstimateImg(null);
+            toast.show({
+                description: 'Estimation Confirmed!'
+            })
+            navigation.navigate('Home');
         }
     }
+
+    // const convertImageToBlob = async (imageUri) => {
+    //     if (imageUri) {
+    //         const response = await fetch(imageUri);
+    //         const blob = await response.blob();
+    //         setImageBlob(blob);
+    //     }
+    // }
 
     return (
         <View style={styles.mainContainer}>
@@ -195,7 +222,7 @@ export default function ClaimScreen({route}) {
                         )}
                         <Button
                             style={{marginTop: 20, backgroundColor: '#3eb134'}}
-                            onPress={()=>navigation.navigate('Home')}
+                            onPress={()=>onConfirmEstimation()}
                         >
                             <Text>CONFIRM ESTIMATION</Text>
                         </Button>

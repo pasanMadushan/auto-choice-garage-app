@@ -1,19 +1,12 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, Image, View, Text} from 'react-native';
-
 import { useNavigation } from '@react-navigation/native';
-import {Button} from "native-base";
-import {request} from "../axios/Axios-utils";
 
 export default function HomeScreen() {
 
     let garageName = 'AUTO MIRAJ ENTERPRISES'
 
     const navigation = useNavigation();
-
-    const testingApi = () => {
-        return request({url: '/auth/test', method: 'post'});
-    }
 
     return (
         <View style={styles.mainContainer}>
@@ -35,8 +28,6 @@ export default function HomeScreen() {
                         />
                     </View>
                 </TouchableOpacity>
-                <Button title='Testing Api' onPress={() => testingApi()}>
-                </Button>
             </View>
 
         </View>
